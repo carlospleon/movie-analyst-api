@@ -1,0 +1,37 @@
+CREATE DATABASE IF NOT EXISTS movie_db;
+
+USE movie_db;
+
+CREATE TABLE IF NOT EXISTS `publications` (
+  `name` VARCHAR(250) NOT NULL,
+  `avatar` VARCHAR(250) NULL,
+  PRIMARY KEY (`name`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `reviewers` (
+  `name` VARCHAR(250) NOT NULL,
+  `publication` VARCHAR(250) NULL,
+  `avatar` VARCHAR(250) NULL,
+  PRIMARY KEY (`name`),
+  INDEX `publication_idx` (`publication` ASC),
+  CONSTRAINT `publication`
+    FOREIGN KEY (`publication`)
+    REFERENCES `publications` (`name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `movies` (
+  `title` VARCHAR(250) NOT NULL,
+  `release_year` VARCHAR(250) NULL,
+  `score` INT(11) NULL,
+  `reviewer` VARCHAR(250) NULL,
+  `publication` VARCHAR(250) NULL,
+  PRIMARY KEY (`title`),
+  INDEX `reviewer_idx` (`reviewer` ASC),
+  CONSTRAINT `reviewer`
+    FOREIGN KEY (`reviewer`)
+    REFERENCES `reviewers` (`name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;

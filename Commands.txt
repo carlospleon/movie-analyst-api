@@ -1,0 +1,29 @@
+//StartDockeronBoot
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+sudo systemctl start docker
+
+//JenkinsBastion
+ssh -i "devops_rampup.pem" ec2-user@3.227.244.97
+
+//FrontEnd
+ssh -i "devops_rampup.pem" ec2-user@3.230.171.186
+ssh -i "devops_rampup.pem" ec2-user@3.89.138.123
+sudo docker run -d -p 3030:3030 -e BACKEND_URL=10.0.3.173:3000 -e PORT=3030  carlospleon/frontend:v1
+
+//BackEnd
+ssh -i "devops_rampup.pem" ec2-user@10.0.3.173
+sudo docker run -d -p 3000:3000 -e APP_PORT=3000 -e DB_HOST=10.0.1.53 -e DB_USER=Admin -e DB_PASS=password -e DB_NAME=movie_db carlospleon/backend:v1
+
+//Share Key 
+scp -i devops_rampup.pem devops_rampup.pem ec2-user@3.227.244.97:~
+
+mysql -u Admin -p'password' \
+        -h 'moviedb.cmfd8deuhu77.us-east-1.rds.amazonaws.com' -P 3306 \
+        -D movie_db
+		
+
+mysql -u Admin -p'password' \
+        -h 'moviedb.ccjcgxwqbftf.us-east-1.rds.amazonaws.com' -P 3306 
+		
+		10.0.3.93
