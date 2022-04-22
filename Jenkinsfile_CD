@@ -1,0 +1,19 @@
+pipeline {
+  agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'ls'
+        sh '''
+        sudo ssh -i devops_rampup.pem ubuntu@10.0.3.10 'sh kubebe.sh'
+        '''
+      }
+    }
+  }
+}
